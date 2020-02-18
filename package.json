@@ -1,0 +1,12 @@
+{
+  "name": "get-audio-vk",
+  "version": "1.0.0",
+  "description": "Parse audios from VK",
+  "main": "index.js",
+  "author": "skinnynpale",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^2.6.0",
+    "puppeteer": "^2.1.1"
+  }
+}
