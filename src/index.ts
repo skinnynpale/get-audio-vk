@@ -128,7 +128,7 @@ async function parsePublicAudios(url: string) {
 
   const ids = dataAudios.map(dataset => takeId(dataset));
 
-  const encryptedUrls = await getEncryptedUrl(cookie, ids);
+  const encryptedUrls = await getEncryptedUrl(cookie, ids.splice(0, 10));
 
   // console.log(encryptedUrls);
 
@@ -143,6 +143,6 @@ async function parsePublicAudios(url: string) {
 
 // parsePublic("https://vk.com/skinnynpalebeats");
 
-parsePublicAudios("https://vk.com/audios-158134892");
+parsePublicAudios("https://vk.com/audios377897606");
 
 export { takeId, getEncryptedUrl, getMp3 };
