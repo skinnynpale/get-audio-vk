@@ -1,4 +1,6 @@
-const vkID = 137567095;
+require("dotenv").config();
+
+const vkID = process.env.ID;
 
 function decode(t) {
   if (~t.indexOf("audio_api_unavailable")) {
