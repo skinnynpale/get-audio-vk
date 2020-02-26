@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const nodeFetch = require("node-fetch");
 
 function delay(time: number) {
