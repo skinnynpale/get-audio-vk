@@ -22,7 +22,7 @@ async function getScrolledDownPage(page: Page) {
   };
 
   await scrollDown();
-  await page.waitFor(5000);
+  await page.waitFor(1000);
   return page;
 }
 

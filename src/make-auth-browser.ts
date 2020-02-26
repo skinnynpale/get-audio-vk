@@ -1,14 +1,13 @@
-require("dotenv").config();
+import { Browser } from "puppeteer";
 
-import startBrowser from "./browser";
+require("dotenv").config();
 
 const LOGIN = process.env.LOGIN;
 const PASS = process.env.PASS;
 
-async function getAuthPage() {
+async function makeAuthBrowser(browser: Browser) {
   if (!(LOGIN && PASS)) throw new Error("Нет логина или пароля");
 
-  const browser = await startBrowser();
   const page = await browser.newPage();
 
   await page.goto("https://vk.com/feed");
@@ -27,8 +26,7 @@ async function getAuthPage() {
 
   await page.click("#login_button");
   await page.waitFor("div.top_profile_name");
-
-  return { browser, page };
+  await page.close();
 }
 
-export default getAuthPage;
+export default makeAuthBrowser;
