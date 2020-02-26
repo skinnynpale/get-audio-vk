@@ -2,13 +2,13 @@
 
 Parse **audios** from user or public in VK
 
-#### Scripts
-
-`Development` Mode - yarn dev
-
-`Production` Mode - yarn build
+#### yarn add get-audio-vk
 
 #### Usage
+
+**yarn** add get-audio-vk
+
+**npm** install --save get-audio-vk
 
 1. Create **.env**
 2. Fill **variables** like .env.template
@@ -35,3 +35,9 @@ const maxTracks = 5;
 
 parse.run(targetID, cookie, maxTracks);
 ```
+
+#### Scripts
+
+`Development` Mode - yarn dev
+
+`Production` Mode - yarn build
