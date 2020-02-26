@@ -5,11 +5,11 @@ import startBrowser from "./browser";
 const LOGIN = process.env.LOGIN;
 const PASS = process.env.PASS;
 
-async function authBrowser() {
+async function getAuthPage() {
   if (!(LOGIN && PASS)) throw new Error("Нет логина или пароля");
 
-  const browser = await startBrowser(false);
-  let page = await browser.newPage();
+  const browser = await startBrowser();
+  const page = await browser.newPage();
 
   await page.goto("https://vk.com/feed");
   await page.waitFor("input[id=email]");
@@ -31,4 +31,4 @@ async function authBrowser() {
   return { browser, page };
 }
 
-export default authBrowser;
+export default getAuthPage;
