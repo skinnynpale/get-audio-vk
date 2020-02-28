@@ -12,15 +12,13 @@ Parse **audios** from user or public in VK
 #### Basic Usage
 
 ```javascript
-const async = require("async");
-const { ParseAudios } = require("./dist/index");
-require("dotenv").config();
+const { ParseAudios } = require("get-audio-vk");
 
 // basic
 (async () => {
-  const login = process.env.LOGIN;
-  const pass = process.env.PASS;
-  const yourId = process.env.YOUR_ID;
+  const login = '+79996665544'; // phone or email
+  const pass = 'MYPASSWORD';
+  const yourId = 133456123; // your VK ID
 
   const parse = new ParseAudios({ login, pass, yourId, headless: false });
   await parse.launch();
@@ -60,6 +58,11 @@ parse.**exit** - close browser
 
 ```javascript
 // multithreading
+const { ParseAudios } = require("get-audio-vk");
+const async = require("async");
+
+require("dotenv").config();
+
 (async () => {
   const login = process.env.LOGIN;
   const pass = process.env.PASS;

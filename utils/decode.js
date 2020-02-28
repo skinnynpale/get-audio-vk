@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 let vkID = null;
 
 function decode(t, yourId) {
