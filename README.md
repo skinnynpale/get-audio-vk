@@ -1,23 +1,26 @@
-## get-audio-vk
+# get-audio-vk
 
 Parse **audios** from user or public in VK
 
-**yarn** add get-audio-vk
+# Installation
 
-#### TODO
+```
+yarn add get-audio-vk
+or
+npm install get-audio-vk --save
+```
 
-1. Support russian symbols
-2. Multi-factor authentication
+# Examples
 
-#### Basic Usage
+### Basic usage
 
 ```javascript
 const { ParseAudios } = require("get-audio-vk");
 
 // basic
 (async () => {
-  const login = '+79996665544'; // phone or email
-  const pass = 'MYPASSWORD';
+  const login = "+79996665544"; // phone or email
+  const pass = "MYPASSWORD";
   const yourId = 133456123; // your VK ID
 
   const parse = new ParseAudios({ login, pass, yourId, headless: false });
@@ -42,31 +45,30 @@ const { ParseAudios } = require("get-audio-vk");
 })();
 ```
 
-**login** - email or phone
+#### Options
 
-**pass** - your password
+- `login` - email or phone
 
-**yourId** - your VK ID
+- `pass` - your password
 
-**headless** - mode when you see browser, default: true
+- `yourId` - your VK ID
 
-parse.**run**( **target-id**: user-id or public-id, **max-tracks** )
+- `headless` - mode when you see browser, default: true
 
-parse.**exit** - close browser
+- `parse.run( target-id: user-id or public-id, max-tracks )`
 
-#### Multithreading
+- `parse.exit` - close browser
+
+### Multithreading
 
 ```javascript
-// multithreading
 const { ParseAudios } = require("get-audio-vk");
 const async = require("async");
 
-require("dotenv").config();
-
 (async () => {
-  const login = process.env.LOGIN;
-  const pass = process.env.PASS;
-  const yourId = process.env.YOUR_ID;
+  const login = "+79996665544"; // phone or email
+  const pass = "MYPASSWORD";
+  const yourId = 133456123; // your VK ID
 
   const parse = new ParseAudios({ login, pass, yourId, headless: false });
   await parse.launch();
@@ -87,3 +89,8 @@ require("dotenv").config();
   }, 10000);
 })();
 ```
+
+# TODO
+
+1. Support russian symbols
+2. Multi-factor authentication
