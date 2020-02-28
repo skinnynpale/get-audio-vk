@@ -1,6 +1,6 @@
 {
   "name": "get-audio-vk",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "Parse audios from VK",
   "main": "dist/index.js",
   "author": "skinnynpale",
