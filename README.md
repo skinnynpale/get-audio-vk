@@ -2,8 +2,6 @@
 
 Parse **audios** from user or public in VK
 
-#### yarn add get-audio-vk
-
 #### Usage
 
 **yarn** add get-audio-vk

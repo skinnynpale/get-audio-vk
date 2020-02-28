@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const nodeFetch = require("node-fetch");
+import axios from "axios";
 
 function delay(time: number) {
   return new Promise(function(resolve) {
@@ -20,28 +20,33 @@ async function getEncryptedUrl(cookie: string, ids: string[]) {
   await asyncForEach(spliceIds, async () => {
     const newIds = spliceIds.splice(0, 5).join(",");
 
-    await nodeFetch("https://vk.com/al_audio.php", {
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "X-Requested-With": "XMLHttpRequest",
-        Cookie: cookie
-      },
-      body: `act=reload_audio&al=1&ids=${newIds}`,
-      method: "POST"
-    })
-      .then((res: { json: () => any }) => res.json())
-      .then((res: any) => {
-        res.payload[1][0].forEach((item: any) => {
-          if (!Array.isArray(item)) return;
-          result.push(item);
-        });
-      })
-      .catch((err: Error) => {
-        console.log(err);
-      });
+    const response = await axios.post(
+      "https://vk.com/al_audio.php",
+      `act=reload_audio&al=1&ids=${newIds}`,
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Requested-With": "XMLHttpRequest",
+          Accept: "*/*",
+          "Accept-Encoding": "gzip, deflate, br",
+          Cookie: cookie,
+          "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+        }
+      }
+    );
 
-    console.log(result.length);
+    try {
+      response.data.payload[1][0].forEach((item: any) => {
+        if (!Array.isArray(item)) return;
+        result.push(item);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+
+    console.log(result);
+
+    // console.log(result.length);
 
     await delay(500);
   });

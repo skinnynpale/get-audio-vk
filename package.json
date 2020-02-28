@@ -5,9 +5,14 @@
   "main": "dist/index.js",
   "author": "skinnynpale",
   "scripts": {
-    "prepare": "tsc",
     "dev": "tsc -w",
-    "build": "tsc"
+    "build": "tsc",
+    "lint": "eslint src/**/*",
+    "prepare": "yarn build",
+    "prepublishOnly": "yarn lint",
+    "preversion": "yarn lint",
+    "version": "git add -A src",
+    "postversion": "git push && git push --tags"
   },
   "license": "MIT",
   "dependencies": {
@@ -16,8 +21,8 @@
     "@types/puppeteer": "^2.0.0",
     "@types/puppeteer-core": "^2.0.0",
     "async": "^3.2.0",
+    "axios": "^0.19.2",
     "dotenv": "^8.2.0",
-    "node-fetch": "^2.6.0",
     "puppeteer": "^2.1.1",
     "typescript": "^3.8.2"
   },
@@ -25,5 +30,21 @@
     "@typescript-eslint/eslint-plugin": "^2.21.0",
     "@typescript-eslint/parser": "^2.21.0",
     "eslint": "^6.8.0"
-  }
+  },
+  "files": [
+    "dist/**/*",
+    "utils/**/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skinnynpale/get-audio-vk.git"
+  },
+  "keywords": [
+    "vk audio",
+    "parse vk audio"
+  ],
+  "bugs": {
+    "url": "https://github.com/skinnynpale/get-audio-vk/issues"
+  },
+  "homepage": "https://github.com/skinnynpale/get-audio-vk#readme"
 }
