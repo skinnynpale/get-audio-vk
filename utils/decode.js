@@ -1,8 +1,10 @@
 require("dotenv").config();
 
-const vkID = process.env.ID;
+let vkID = null;
 
-function decode(t) {
+function decode(t, yourId) {
+  vkID = yourId;
+
   if (~t.indexOf("audio_api_unavailable")) {
     var e = t.split("?extra=")[1].split("#"),
       o = "" === e[1] ? "" : a(e[1]);

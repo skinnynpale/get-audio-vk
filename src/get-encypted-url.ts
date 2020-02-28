@@ -44,9 +44,7 @@ async function getEncryptedUrl(cookie: string, ids: string[]) {
       console.log(err);
     }
 
-    console.log(result);
-
-    // console.log(result.length);
+    console.log(`~Finished ${result.length} tracks`);
 
     await delay(500);
   });
