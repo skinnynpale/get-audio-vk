@@ -8,12 +8,20 @@ require("dotenv").config();
   const pass = process.env.PASS;
   const yourId = process.env.YOUR_ID;
 
-  const parse = new ParseAudios({ login, pass, yourId, headless: false });
+  const parse = new ParseAudios({
+    login,
+    pass,
+    yourId,
+    headless: false
+  });
   await parse.launch();
-  const tracks = await parse.run(-158134892, 5);
+  const tracks = await parse.run(377897606, 3);
   await parse.exit();
   console.log(tracks);
-})();
+})().catch(err => {
+  console.log("❌ " + err.message);
+  process.exit(1);
+});
 
 // multithreading
 // (async () => {

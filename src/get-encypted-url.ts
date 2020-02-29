@@ -14,11 +14,11 @@ async function asyncForEach(array: any[], callback: Function) {
 }
 
 async function getEncryptedUrl(cookie: string, ids: string[]) {
-  const result: [string[]] = [[]];
+  const result: any[] = [];
   const spliceIds = ids;
 
   await asyncForEach(spliceIds, async () => {
-    const newIds = spliceIds.splice(0, 5).join(",");
+    const newIds = spliceIds.splice(0, 6).join(",");
 
     const response = await axios.post(
       "https://vk.com/al_audio.php",
@@ -37,15 +37,15 @@ async function getEncryptedUrl(cookie: string, ids: string[]) {
 
     try {
       response.data.payload[1][0].forEach((item: any) => {
-        if (!Array.isArray(item)) return;
-        result.push(item);
+        if (!Array.isArray(item) && !item.length) return;
+        result.push(item[2]);
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
+      throw new Error("HTTP Request is failed, please send issue to repo");
     }
 
-    console.log(`~Finished ${result.length} tracks`);
-
+    console.log(`⚡ Finished ${result.length} tracks`);
     await delay(500);
   });
 

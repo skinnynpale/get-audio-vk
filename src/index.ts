@@ -1,4 +1,4 @@
-import { Browser } from "puppeteer";
+import { Browser, Page } from "puppeteer";
 import getScrolledDownPage from "./get-scrolled-down-page";
 import getEncryptedUrl from "./get-encypted-url";
 
@@ -6,11 +6,20 @@ import getEncryptedUrl from "./get-encypted-url";
 import decode from "../utils/decode";
 import startBrowser from "./browser";
 
-function takeId(dataset: string) {
-  const data = JSON.parse(dataset);
+function takeId(data: string) {
   const splitted = data[13].split("/");
   const unique = `${splitted[2]}_${splitted[5]}`;
   return `${data[1]}_${data[0]}_${unique}`;
+}
+
+async function getCookie(page: Page) {
+  await page.click(".audio_row");
+  const cookie = (await page.cookies())
+    .map(cookie => {
+      return `${cookie.name}=${cookie.value}`;
+    })
+    .join("; ");
+  return cookie;
 }
 
 interface ParseConfig {
@@ -19,6 +28,13 @@ interface ParseConfig {
   yourId: string;
   headless?: boolean;
 }
+
+// interface Track {
+//   mp3: string;
+//   title: string;
+//   author: string;
+//   cover?: string;
+// }
 
 class ParseAudios {
   private browser!: Browser;
@@ -41,13 +57,14 @@ class ParseAudios {
   async run(id: number, max = 0) {
     const page = await this.browser.newPage();
     await page.goto(`https://vk.com/audios${id}`);
-    const { cookie } = await getScrolledDownPage(page);
+    await getScrolledDownPage(page);
+    const cookie = await getCookie(page);
 
-    const dataAudios: string[] = await page.evaluate(max => {
+    const audiosDataset: string[] = await page.evaluate(max => {
       const audios = Array.from(document.querySelectorAll(".audio_row"));
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const data = audios.map(item => (item as any).dataset.audio);
+      const data = audios.map(item => JSON.parse((item as any).dataset.audio));
 
       if (max) {
         return data.splice(0, max);
@@ -55,32 +72,39 @@ class ParseAudios {
       return data;
     }, max);
 
+    console.log(`${audiosDataset.length} - tracks ready to parse`);
+
+    let tracks = audiosDataset.map(track => ({
+      mp3: "",
+      title: track[3],
+      author: track[4],
+      cover: track[14] && track[14].split(",")[1]
+    }));
+
     await page.close();
 
-    const ids = dataAudios.map(dataset => takeId(dataset));
+    const ids = audiosDataset.map(dataset => takeId(dataset));
     const encryptedUrls = await getEncryptedUrl(cookie, ids);
-    let tracks = encryptedUrls.map(
-      item =>
-        item && {
-          mp3: item[2],
-          author: item[4],
-          title: item[3],
-          cover: item[14] && item[14].split(",")[1]
-        }
-    );
+
+    tracks = encryptedUrls.map((item, index) => ({
+      ...tracks[index],
+      mp3: item
+    }));
+
     tracks = tracks.map(item => {
       const encodedMp3 = item.mp3 && decode(item.mp3, this.config.yourId);
       return { ...item, mp3: encodedMp3 };
     });
-    tracks.splice(0, 1); // remove first broken element
+
+    console.log(`✅ id${id} — done`);
     return tracks;
   }
 
   async makeAuthBrowser() {
+    console.log("...login");
     const page = await this.browser.newPage();
     await page.goto("https://vk.com/feed");
     await page.waitFor("input[id=email]");
-
     await page.$eval(
       'input[id="email"]',
       (el, login) => ((el as HTMLInputElement).value = login),
@@ -91,10 +115,15 @@ class ParseAudios {
       (el, pass) => ((el as HTMLInputElement).value = pass),
       this.config.pass
     );
-
     await page.click("#login_button");
-    await page.waitFor("div.top_profile_name");
+    await page.waitFor("div.top_profile_name", { timeout: 3000 }).catch(() => {
+      throw new Error(
+        "Timeout 3s \n Failed to auth, possible reasons: \n 1. Incorrect login or password \n 2. Showed captcha \n 3." +
+          " Slowly internet"
+      );
+    });
     await page.close();
+    console.log(`✅ - Auth`);
   }
 }
 

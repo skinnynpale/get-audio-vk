@@ -14,22 +14,16 @@ async function getScrolledDownPage(page: Page) {
     };
 
     while (scrollY !== prevScrollY) {
-      console.log(`scrollY - ${scrollY}`);
+      console.log(`⏬ Scrolled to - ${scrollY}y`);
       await scrollTo();
       await page.waitFor(100);
     }
   };
 
-  await page.click(".audio_row");
-  const cookie = (await page.cookies())
-    .map(cookie => {
-      return `${cookie.name}=${cookie.value}`;
-    })
-    .join("; ");
+
 
   await scrollDown();
   await page.waitFor(1000);
-  return { cookie, page };
 }
 
 export default getScrolledDownPage;

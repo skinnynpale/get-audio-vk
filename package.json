@@ -1,7 +1,7 @@
 {
   "name": "get-audio-vk",
-  "version": "3.0.0",
-  "description": "Parse audios from VK",
+  "version": "3.1.0",
+  "description": "Parse open audios from user or public in VK",
   "main": "dist/index.js",
   "author": "skinnynpale",
   "scripts": {

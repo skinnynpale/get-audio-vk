@@ -1,6 +1,6 @@
 # get-audio-vk
 
-Parse **audios** from user or public in VK
+Parse open **audios** from user or public in VK
 
 # Installation
 
@@ -23,9 +23,9 @@ const { ParseAudios } = require("get-audio-vk");
   const pass = "MYPASSWORD";
   const yourId = 133456123; // your VK ID
 
-  const parse = new ParseAudios({ login, pass, yourId, headless: false });
+  const parse = new ParseAudios({ login, pass, yourId, headless: false }); // headless: false if u wanna watch process
   await parse.launch();
-  const tracks = await parse.run(-158134892, 5);
+  const tracks = await parse.run(-158134892, 5); // 1. target-id, 2. max-tracks
   await parse.exit();
   console.log(tracks);
 
@@ -42,22 +42,17 @@ const { ParseAudios } = require("get-audio-vk");
   // {
   //    ...
   // }
-})();
+})().catch(err => {
+  console.log("❌ " + err.message);
+  process.exit(1);
+});
 ```
 
 #### Options
 
-- `login` - email or phone
-
-- `pass` - your password
-
-- `yourId` - your VK ID
-
-- `headless` - mode when you see browser, default: true
-
-- `parse.run( target-id: user-id or public-id, max-tracks )`
-
-- `parse.exit` - close browser
+- `await parse.launch()` - start browser
+- `await parse.run(target-id, max-tracks)` - run parser
+- `await parse.exit()` - close browser
 
 ### Multithreading
 
@@ -87,10 +82,8 @@ const async = require("async");
   setTimeout(() => {
     queueArray.push(() => parse.run(-165626408, 5));
   }, 10000);
-})();
+})().catch(err => {
+  console.log("❌ " + err.message);
+  process.exit(1);
+});
 ```
-
-# TODO
-
-1. Support russian symbols
-2. Multi-factor authentication
