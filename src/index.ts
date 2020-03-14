@@ -116,9 +116,9 @@ class ParseAudios {
       this.config.pass
     );
     await page.click("#login_button");
-    await page.waitFor("div.top_profile_name", { timeout: 3000 }).catch(() => {
+    await page.waitFor("div.top_profile_name", { timeout: 10000 }).catch(() => {
       throw new Error(
-        "Timeout 3s \n Failed to auth, possible reasons: \n 1. Incorrect login or password \n 2. Showed captcha \n 3." +
+        "Timeout 10s \n Failed to auth, possible reasons: \n 1. Incorrect login or password \n 2. Showed captcha \n 3." +
           " Slowly internet"
       );
     });

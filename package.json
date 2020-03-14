@@ -1,6 +1,6 @@
 {
   "name": "get-audio-vk",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Parse open audios from user or public in VK",
   "main": "dist/index.js",
   "author": "skinnynpale",
@@ -9,10 +9,7 @@
     "build": "rimraf dist && tsc",
     "lint": "eslint src/**/*",
     "prepare": "yarn build",
-    "prepublishOnly": "yarn lint",
-    "preversion": "yarn lint",
-    "version": "git add -A src",
-    "postversion": "git push && git push --tags"
+    "prepublishOnly": "yarn lint"
   },
   "license": "MIT",
   "dependencies": {
