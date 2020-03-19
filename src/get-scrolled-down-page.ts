@@ -14,13 +14,10 @@ async function getScrolledDownPage(page: Page) {
     };
 
     while (scrollY !== prevScrollY) {
-      console.log(`⏬ Scrolled to - ${scrollY}y`);
       await scrollTo();
       await page.waitFor(100);
     }
   };
-
-
 
   await scrollDown();
   await page.waitFor(1000);

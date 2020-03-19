@@ -1,6 +1,7 @@
 const async = require("async");
 const { ParseAudios } = require("./dist/index");
 require("dotenv").config();
+const fs = require("fs");
 
 // basic
 (async () => {
@@ -15,9 +16,12 @@ require("dotenv").config();
     headless: false
   });
   await parse.launch();
-  const tracks = await parse.run(377897606, 3);
+  const tracks = await parse.run(41697780);
   await parse.exit();
-  console.log(tracks);
+  fs.writeFile("tracks.json", JSON.stringify(tracks), err => {
+    if (err) throw err;
+    console.log("The file tracks.json has been created!");
+  });
 })().catch(err => {
   console.log("❌ " + err.message);
   process.exit(1);

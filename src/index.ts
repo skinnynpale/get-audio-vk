@@ -29,13 +29,6 @@ interface ParseConfig {
   headless?: boolean;
 }
 
-// interface Track {
-//   mp3: string;
-//   title: string;
-//   author: string;
-//   cover?: string;
-// }
-
 class ParseAudios {
   private browser!: Browser;
 
@@ -69,10 +62,9 @@ class ParseAudios {
       if (max) {
         return data.splice(0, max);
       }
+
       return data;
     }, max);
-
-    console.log(`${audiosDataset.length} - tracks ready to parse`);
 
     let tracks = audiosDataset.map(track => ({
       mp3: "",
@@ -84,7 +76,13 @@ class ParseAudios {
     await page.close();
 
     const ids = audiosDataset.map(dataset => takeId(dataset));
-    const encryptedUrls = await getEncryptedUrl(cookie, ids);
+
+    const slicedIds: string[] = [];
+    for (let i = 0; i <= ids.length; i += 7) {
+      slicedIds.push(ids.slice(i, i + 7).join(","));
+    }
+
+    const encryptedUrls = await getEncryptedUrl(cookie, slicedIds);
 
     tracks = encryptedUrls.map((item, index) => ({
       ...tracks[index],
@@ -96,12 +94,14 @@ class ParseAudios {
       return { ...item, mp3: encodedMp3 };
     });
 
-    console.log(`✅ id${id} — done`);
+    console.log(
+      `⚡ Finished ${tracks.length} / ${audiosDataset.length} tracks`
+    );
     return tracks;
   }
 
   async makeAuthBrowser() {
-    console.log("...login");
+    console.log("login...");
     const page = await this.browser.newPage();
     await page.goto("https://vk.com/feed");
     await page.waitFor("input[id=email]");
@@ -119,11 +119,12 @@ class ParseAudios {
     await page.waitFor("div.top_profile_name", { timeout: 10000 }).catch(() => {
       throw new Error(
         "Timeout 10s \n Failed to auth, possible reasons: \n 1. Incorrect login or password \n 2. Showed captcha \n 3." +
-          " Slowly internet"
+          " Slowly internet \n" +
+          "4. Slowly computer"
       );
     });
     await page.close();
-    console.log(`✅ - Auth`);
+    console.log(`✅ Auth`);
   }
 }
 
