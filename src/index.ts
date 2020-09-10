@@ -5,6 +5,7 @@ import getEncryptedUrl from "./get-encypted-url";
 // @ts-ignore
 import decode from "../utils/decode";
 import startBrowser from "./browser";
+import getMp3 from "./get-mp3";
 
 function takeId(data: string) {
   const splitted = data[13].split("/");
@@ -15,7 +16,7 @@ function takeId(data: string) {
 async function getCookie(page: Page) {
   await page.click(".audio_row");
   const cookie = (await page.cookies())
-    .map(cookie => {
+    .map((cookie) => {
       return `${cookie.name}=${cookie.value}`;
     })
     .join("; ");
@@ -53,11 +54,13 @@ class ParseAudios {
     await getScrolledDownPage(page);
     const cookie = await getCookie(page);
 
-    const audiosDataset: string[] = await page.evaluate(max => {
+    const audiosDataset: string[] = await page.evaluate((max) => {
       const audios = Array.from(document.querySelectorAll(".audio_row"));
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const data = audios.map(item => JSON.parse((item as any).dataset.audio));
+      const data = audios.map((item) =>
+        JSON.parse((item as any).dataset.audio)
+      );
 
       if (max) {
         return data.splice(0, max);
@@ -66,16 +69,16 @@ class ParseAudios {
       return data;
     }, max);
 
-    let tracks = audiosDataset.map(track => ({
+    let tracks = audiosDataset.map((track) => ({
       mp3: "",
       title: track[3],
       author: track[4],
-      cover: track[14] && track[14].split(",")[1]
+      cover: track[14] && track[14].split(",")[1],
     }));
 
     await page.close();
 
-    const ids = audiosDataset.map(dataset => takeId(dataset));
+    const ids = audiosDataset.map((dataset) => takeId(dataset));
 
     const slicedIds: string[] = [];
     for (let i = 0; i <= ids.length; i += 7) {
@@ -86,12 +89,13 @@ class ParseAudios {
 
     tracks = encryptedUrls.map((item, index) => ({
       ...tracks[index],
-      mp3: item
+      mp3: item,
     }));
 
-    tracks = tracks.map(item => {
+    tracks = tracks.map((item) => {
       const encodedMp3 = item.mp3 && decode(item.mp3, this.config.yourId);
-      return { ...item, mp3: encodedMp3 };
+      const mp3 = getMp3(encodedMp3);
+      return { ...item, mp3: mp3 ? mp3 : "" };
     });
 
     console.log(

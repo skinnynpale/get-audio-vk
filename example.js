@@ -13,16 +13,16 @@ const fs = require("fs");
     login,
     pass,
     yourId,
-    headless: false
+    headless: false,
   });
   await parse.launch();
-  const tracks = await parse.run(41697780);
+  const tracks = await parse.run(41697780, 5);
   await parse.exit();
-  fs.writeFile("tracks.json", JSON.stringify(tracks), err => {
+  fs.writeFile("tracks.json", JSON.stringify(tracks), (err) => {
     if (err) throw err;
     console.log("The file tracks.json has been created!");
   });
-})().catch(err => {
+})().catch((err) => {
   console.log("❌ " + err.message);
   process.exit(1);
 });
